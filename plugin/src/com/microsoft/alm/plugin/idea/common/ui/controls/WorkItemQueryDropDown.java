@@ -150,7 +150,12 @@ public class WorkItemQueryDropDown extends FilterDropDown {
                             // add results to the menu
                             for (final QueryHierarchyItem item : wiResults.getQueries()) {
                                 //TODO check for folder items here and handle appropriately
-                                group.add(new QueryAction(item.getName(), item.getWiql()));
+                                if (item.getName().equals("Sprint Tasks and Bugs")) {
+                                    group.add(new QueryAction(item.getName(), item.getWiql()), Constraints.FIRST);
+                                }
+                                else {
+                                    group.add(new QueryAction(item.getName(), item.getWiql()));
+                                }
                             }
                         }
                     });

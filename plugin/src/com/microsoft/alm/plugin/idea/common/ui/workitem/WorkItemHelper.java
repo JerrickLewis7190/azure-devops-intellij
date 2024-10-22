@@ -26,10 +26,7 @@ public class WorkItemHelper {
     public static final String BRANCH_ATTRIBUTE_VALUE = "branch";
 
     public static String getAssignedToMeQuery() {
-        return "select system.id, system.workitemtype, system.title, system.assignedto, system.state, system.changeddate " +
-                "from workitems " +
-                "where system.assignedto = @me and system.teamproject = @project and microsoft.vsts.common.closedby = '' " +
-                "order by system.changeddate desc, system.id desc";
+        return "select [System.Id], [System.WorkItemType], [System.Title], [System.AssignedTo], [System.State], [System.Tags], [System.IterationPath] from WorkItems where [System.TeamProject] = 'Xbox' and [System.IterationPath] = @currentIteration('[Xbox]\\Team RoyHer <id:daa35181-9a74-4986-95f1-f32c06d64056>') and [System.AssignedTo] = 'Jerrick Lewis🎮 <jerl@microsoft.com>' and [System.WorkItemType] in ('Task', 'Bug') and [System.State] <> 'Completed' and [System.State] <> 'Closed' and [System.State] <> 'Resolved'";
     }
 
     public static List<String> getDefaultFields() {
