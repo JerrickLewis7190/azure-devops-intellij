@@ -48,8 +48,8 @@ public class VsoAuthInfoProvider implements AuthenticationInfoProvider {
     private final VstsPatAuthenticator vstsPatAuthenticator;
     private final VsoTokenScope[] scopes = new VsoTokenScope[] {
             VsoTokenScope.BuildAccess,
-            VsoTokenScope.CodeRead,
-            VsoTokenScope.PackagingRead,
+            VsoTokenScope.CodeWrite,
+            VsoTokenScope.PackagingWrite,
             VsoTokenScope.WorkWrite,
             VsoTokenScope.TestRead,
             VsoTokenScope.ProfileRead,

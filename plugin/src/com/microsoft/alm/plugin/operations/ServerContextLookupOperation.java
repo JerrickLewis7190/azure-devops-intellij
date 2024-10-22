@@ -26,6 +26,7 @@ import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.concurrent.Future;
+import java.util.stream.Collectors;
 
 public class ServerContextLookupOperation extends Operation {
     private static final Logger logger = LoggerFactory.getLogger(ServerContextLookupOperation.class);
@@ -62,7 +63,7 @@ public class ServerContextLookupOperation extends Operation {
             final List<Throwable> operationExceptions = new CopyOnWriteArrayList<Throwable>();
 
             final List<Future> tasks = new ArrayList<Future>();
-            for (final ServerContext context : contextList) {
+            for (final ServerContext context : contextList.stream().filter(serverContext -> !serverContext.getUri().toString().contains("cortana")).collect(Collectors.toList())) {
                 // submit each account as a separate piece of work to the executor
                 tasks.add(OperationExecutor.getInstance().submitOperationTask(new Runnable() {
                     @Override
@@ -96,6 +97,11 @@ public class ServerContextLookupOperation extends Operation {
                                 } catch (final Throwable tAgain) {
                                     logger.warn("Failed to lookup repositories even after re-authentication.", tAgain);
                                 }
+                            }
+
+                            if (t.getMessage().contains("503"))
+                            {
+                                shouldReportError = false;
                             }
 
                             if (shouldReportError) {

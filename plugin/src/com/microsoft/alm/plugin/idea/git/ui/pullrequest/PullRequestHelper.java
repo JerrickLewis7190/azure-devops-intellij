@@ -11,6 +11,7 @@ import com.microsoft.alm.plugin.idea.common.resources.TfPluginBundle;
 import com.microsoft.alm.sourcecontrol.webapi.GitHttpClient;
 import com.microsoft.alm.sourcecontrol.webapi.model.GitPullRequest;
 import com.microsoft.alm.sourcecontrol.webapi.model.GitPullRequestSearchCriteria;
+import com.microsoft.alm.sourcecontrol.webapi.model.IdentityRefWithVote;
 import com.microsoft.alm.sourcecontrol.webapi.model.PullRequestStatus;
 import com.microsoft.visualstudio.services.webapi.model.ResourceRef;
 import git4idea.GitCommit;
@@ -27,7 +28,7 @@ import java.util.UUID;
 /**
  * Helper utility class for pull request related methods
  */
-public class PullRequestHelper {
+public class PullRequestHelper{
 
     private static final Logger logger = LoggerFactory.getLogger(PullRequestHelper.class);
 

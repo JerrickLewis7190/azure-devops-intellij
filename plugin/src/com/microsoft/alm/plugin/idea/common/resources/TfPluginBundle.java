@@ -385,6 +385,8 @@ public class TfPluginBundle {
     @NonNls
     public static final String KEY_VCS_PR_REQUESTED_BY_ME = "VcsPullRequestsTab.RequestedByMe";
     @NonNls
+    public static final String KEY_VCS_PR_ASSIGNED_TO_TEAM_ROY = "VcsPullRequestsTab.AssignedToTeamRoy";
+    @NonNls
     public static final String KEY_VCS_PR_ASSIGNED_TO_ME = "VcsPullRequestsTab.AssignedToMe";
     @NonNls
     public static final String KEY_VCS_PR_ABANDON = "VcsPullRequestsTab.Abandon";

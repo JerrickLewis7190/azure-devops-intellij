@@ -21,6 +21,9 @@ public class PullRequestsTreeModel extends DefaultTreeModel implements FilteredM
     private final PRTreeNode root;
     private final PRTreeNode requestedByMeRoot;
     private final PRTreeNode assignedToMeRoot;
+    private final PRTreeNode assignedToTeamRoy;
+    private final ArrayList<GitPullRequest> allAssignedToTeamRoyPullRequests;
+    //private final PRTreeNode assignedToTeamRoyRoot;
     private TreeSelectionModel selectionModel;
     private final List<GitPullRequest> allRequestedByMePullRequests;
     private final List<GitPullRequest> allAssignedToMePullRequests;
@@ -35,9 +38,12 @@ public class PullRequestsTreeModel extends DefaultTreeModel implements FilteredM
         root.insert(requestedByMeRoot, 0);
         this.assignedToMeRoot = new PRTreeNode(TfPluginBundle.message(TfPluginBundle.KEY_VCS_PR_ASSIGNED_TO_ME));
         root.insert(assignedToMeRoot, 1);
+        this.assignedToTeamRoy = new PRTreeNode(TfPluginBundle.message(TfPluginBundle.KEY_VCS_PR_ASSIGNED_TO_TEAM_ROY));
+        root.insert(assignedToTeamRoy, 2);
 
         allRequestedByMePullRequests = new ArrayList<GitPullRequest>();
         allAssignedToMePullRequests = new ArrayList<GitPullRequest>();
+        allAssignedToTeamRoyPullRequests = new ArrayList<GitPullRequest>();
 
         selectionModel = new DefaultTreeSelectionModel();
         selectionModel.setSelectionMode(DefaultTreeSelectionModel.SINGLE_TREE_SELECTION);
@@ -51,15 +57,23 @@ public class PullRequestsTreeModel extends DefaultTreeModel implements FilteredM
         return assignedToMeRoot;
     }
 
+    public PRTreeNode getAssignedToTeamRoy() {
+        return assignedToTeamRoy;
+    }
+
     public void appendPullRequests(final List<GitPullRequest> pullRequests, final PullRequestLookupOperation.PullRequestScope scope) {
         final PRTreeNode rootNode;
 
         if (scope == PullRequestLookupOperation.PullRequestScope.REQUESTED_BY_ME) {
             rootNode = requestedByMeRoot;
             allRequestedByMePullRequests.addAll(pullRequests);
-        } else {
+        } else if (scope == PullRequestLookupOperation.PullRequestScope.ASSIGNED_TO_ME){
             rootNode = assignedToMeRoot;
             allAssignedToMePullRequests.addAll(pullRequests);
+        }
+        else {
+            rootNode = assignedToTeamRoy;
+            allAssignedToTeamRoyPullRequests.addAll(pullRequests);
         }
 
         // filter if there is a filter else add all PRs to root

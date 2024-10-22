@@ -42,6 +42,7 @@ import com.microsoft.alm.plugin.idea.common.utils.VcsHelper;
 import com.microsoft.alm.plugin.idea.git.utils.GeneralGitHelper;
 import com.microsoft.alm.plugin.idea.git.utils.TfGitHelper;
 import com.microsoft.alm.sourcecontrol.webapi.model.GitPullRequest;
+import com.microsoft.alm.sourcecontrol.webapi.model.IdentityRefWithVote;
 import com.microsoft.alm.workitemtracking.webapi.models.Link;
 import com.microsoft.visualstudio.services.webapi.patch.json.JsonPatchDocument;
 import com.microsoft.visualstudio.services.webapi.patch.json.JsonPatchOperation;
@@ -574,6 +575,11 @@ public class CreatePullRequestModel extends AbstractModel {
             // creating pull request and associating work items with it (if that API is available)
             final GitPullRequest gitPullRequest
                     = gitClient.createPullRequest(pullRequestToBeCreated, projectId, repositoryId, true, true);
+
+            IdentityRefWithVote identityRefWithVote = new IdentityRefWithVote();
+            identityRefWithVote.setId("daa35181-9a74-4986-95f1-f32c06d64056");
+            gitPullRequest.setReviewers(new IdentityRefWithVote[]{identityRefWithVote});
+            gitClient.createPullRequestReviewer(identityRefWithVote, gitPullRequest.getRepository().getId(), gitPullRequest.getPullRequestId(), identityRefWithVote.getId());
 
             final String repositoryRemoteUrl = context.getGitRepository().getRemoteUrl();
             notifySuccess(project, TfPluginBundle.message(TfPluginBundle.KEY_CREATE_PR_CREATED_TITLE),

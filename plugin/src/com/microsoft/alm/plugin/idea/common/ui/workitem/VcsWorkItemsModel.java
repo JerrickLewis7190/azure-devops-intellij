@@ -34,6 +34,7 @@ import org.slf4j.LoggerFactory;
 
 import javax.swing.event.HyperlinkEvent;
 import java.net.URI;
+import java.text.Normalizer;
 import java.util.HashMap;
 import java.util.List;
 
@@ -109,7 +110,7 @@ public class VcsWorkItemsModel extends TabModelImpl<WorkItemsTableModel> {
 
         // call the Create Branch dialog and get the branch name from the user
         final CreateBranchController controller = new CreateBranchController(project,
-                String.format(DEFAULT_BRANCH_NAME_PATTERN, workItem.getId()), VcsHelper.getGitRepository(project));
+        makeBranchName(workItem.getFields().get("System.Title").toString()), VcsHelper.getGitRepository(project));
 
         if (controller.showModalDialog()) {
             final String branchName = controller.getBranchName();
@@ -147,6 +148,37 @@ public class VcsWorkItemsModel extends TabModelImpl<WorkItemsTableModel> {
                 logger.error("Failed to create a branch and associate it with a work item", e);
             }
         }
+    }
+
+    public static String makeBranchName(String input) {
+        if (input == null || input.isEmpty()) {
+            throw new IllegalArgumentException("Input string cannot be null or empty");
+        }
+
+        // Step 1: Normalize and convert to lowercase
+        String branchName = input.trim().toLowerCase();
+
+        // Step 2: Replace spaces and illegal characters with underscores
+        branchName = branchName.replaceAll("[\\s~^:?*\\[\\]/\\\\]+", "_");
+
+        // Step 3: Remove accents (normalize to ASCII)
+        branchName = Normalizer.normalize(branchName, Normalizer.Form.NFD);
+        branchName = branchName.replaceAll("[^\\p{ASCII}]", "");
+
+        // Step 4: Ensure the branch doesn't start with an underscore
+        if (branchName.startsWith("_")) {
+            branchName = branchName.substring(1);
+        }
+
+        // Step 5: Ensure the branch doesn't end with an underscore or dot
+        branchName = branchName.replaceAll("[_.]+$", "");
+
+        // Step 6: Ensure it's not empty after sanitizing
+        if (branchName.isEmpty()) {
+            branchName = "default_branch"; // Fallback to a default name
+        }
+
+        return "users/jerl/" + branchName;
     }
 
     protected boolean createWorkItemBranchAssociation(final ServerContext context, final String branchName, final int workItemId) {
